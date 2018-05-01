@@ -27,17 +27,86 @@ public class frmMain extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        lblLogo = new javax.swing.JLabel();
+        mnuMenuBar = new javax.swing.JMenuBar();
+        mnuFile = new javax.swing.JMenu();
+        mnuFileNew = new javax.swing.JMenu();
+        mnuFileNewOrder = new javax.swing.JMenuItem();
+        mnuFileNewCustomer = new javax.swing.JMenuItem();
+        mnuDisplay = new javax.swing.JMenu();
+        mnuDisplayCoffees = new javax.swing.JMenuItem();
+        mnuDisplayCustomers = new javax.swing.JMenuItem();
+        mnuDisplayOrders = new javax.swing.JMenuItem();
+        mnuDatabase = new javax.swing.JMenu();
+        mnuDatabaseCreate = new javax.swing.JMenuItem();
+        mnuDatabaseDrop = new javax.swing.JMenuItem();
+        mnuDatabasePopulate = new javax.swing.JMenuItem();
+        mnuDatabaseReset = new javax.swing.JMenuItem();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/zdcfinalproject/Coffee.png"))); // NOI18N
+
+        mnuFile.setText("File");
+
+        mnuFileNew.setText("New");
+
+        mnuFileNewOrder.setText("Order");
+        mnuFileNew.add(mnuFileNewOrder);
+
+        mnuFileNewCustomer.setText("Customer");
+        mnuFileNew.add(mnuFileNewCustomer);
+
+        mnuFile.add(mnuFileNew);
+
+        mnuMenuBar.add(mnuFile);
+
+        mnuDisplay.setText("Display");
+
+        mnuDisplayCoffees.setText("Coffees");
+        mnuDisplay.add(mnuDisplayCoffees);
+
+        mnuDisplayCustomers.setText("Customers");
+        mnuDisplay.add(mnuDisplayCustomers);
+
+        mnuDisplayOrders.setText("Orders by Customer");
+        mnuDisplay.add(mnuDisplayOrders);
+
+        mnuMenuBar.add(mnuDisplay);
+
+        mnuDatabase.setText("Database");
+
+        mnuDatabaseCreate.setText("Create Tables");
+        mnuDatabase.add(mnuDatabaseCreate);
+
+        mnuDatabaseDrop.setText("Drop Tables");
+        mnuDatabase.add(mnuDatabaseDrop);
+
+        mnuDatabasePopulate.setText("Populate Tables");
+        mnuDatabase.add(mnuDatabasePopulate);
+
+        mnuDatabaseReset.setText("Reset Tables");
+        mnuDatabase.add(mnuDatabaseReset);
+
+        mnuMenuBar.add(mnuDatabase);
+
+        setJMenuBar(mnuMenuBar);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblLogo)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblLogo)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -79,5 +148,20 @@ public class frmMain extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel lblLogo;
+    private javax.swing.JMenu mnuDatabase;
+    private javax.swing.JMenuItem mnuDatabaseCreate;
+    private javax.swing.JMenuItem mnuDatabaseDrop;
+    private javax.swing.JMenuItem mnuDatabasePopulate;
+    private javax.swing.JMenuItem mnuDatabaseReset;
+    private javax.swing.JMenu mnuDisplay;
+    private javax.swing.JMenuItem mnuDisplayCoffees;
+    private javax.swing.JMenuItem mnuDisplayCustomers;
+    private javax.swing.JMenuItem mnuDisplayOrders;
+    private javax.swing.JMenu mnuFile;
+    private javax.swing.JMenu mnuFileNew;
+    private javax.swing.JMenuItem mnuFileNewCustomer;
+    private javax.swing.JMenuItem mnuFileNewOrder;
+    private javax.swing.JMenuBar mnuMenuBar;
     // End of variables declaration//GEN-END:variables
 }
