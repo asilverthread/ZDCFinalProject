@@ -5,6 +5,11 @@
  */
 package zdcfinalproject;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Interact
@@ -17,7 +22,41 @@ public class frmMain extends javax.swing.JFrame {
     public frmMain() {
         initComponents();
     }
+    
+    public frmMain(Connection c){
+        coffeeConnection = c;
+        initComponents();
+    }
 
+    public void createTables() throws SQLException{
+        //CREATE THE TABLES
+        coffeeConnection.prepareStatement(dbCustomerTableCreate).execute();
+        coffeeConnection.prepareStatement(dbCoffeeTableCreate).execute();
+        coffeeConnection.prepareStatement(dbOrderTableCreate).execute();
+    }
+    public void populateTables() throws SQLException{
+        //POPULATE THE TABLES
+        for(String s : dbCustomerTableInsert){
+            coffeeConnection.prepareStatement(s).execute();
+        }
+        for(String s : dbCoffeeTableInsert){
+            coffeeConnection.prepareStatement(s).execute();
+        }
+        for(String s : dbOrderTableInsert){
+            coffeeConnection.prepareStatement(s).execute();
+        }
+    }
+    public void dropTables() throws SQLException{
+        //DELETE THE TABLES
+        coffeeConnection.prepareStatement(dbCustomerTableDrop).execute();
+        coffeeConnection.prepareStatement(dbCoffeeTableDrop).execute();
+        coffeeConnection.prepareStatement(dbOrderTableDrop).execute();
+    }
+    public void resetTables() throws SQLException{
+        dropTables();
+        createTables();
+        populateTables();
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -28,11 +67,14 @@ public class frmMain extends javax.swing.JFrame {
     private void initComponents() {
 
         lblLogo = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
         mnuMenuBar = new javax.swing.JMenuBar();
         mnuFile = new javax.swing.JMenu();
         mnuFileNew = new javax.swing.JMenu();
         mnuFileNewOrder = new javax.swing.JMenuItem();
         mnuFileNewCustomer = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
         mnuDisplay = new javax.swing.JMenu();
         mnuDisplayCoffees = new javax.swing.JMenuItem();
         mnuDisplayCustomers = new javax.swing.JMenuItem();
@@ -44,18 +86,44 @@ public class frmMain extends javax.swing.JFrame {
         mnuDatabaseReset = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/zdcfinalproject/Coffee.png"))); // NOI18N
+
+        jTextArea1.setEditable(false);
+        jTextArea1.setColumns(20);
+        jTextArea1.setLineWrap(true);
+        jTextArea1.setRows(5);
+        jTextArea1.setText("Welcome to the most awesomest coffee shop you ever done \ngone and visited. We got cool coffee, and an even cooler staff.\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
+        jScrollPane1.setViewportView(jTextArea1);
 
         mnuFile.setText("File");
 
         mnuFileNew.setText("New");
 
         mnuFileNewOrder.setText("Order");
+        mnuFileNewOrder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuFileNewOrderActionPerformed(evt);
+            }
+        });
         mnuFileNew.add(mnuFileNewOrder);
 
         mnuFileNewCustomer.setText("Customer");
+        mnuFileNewCustomer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuFileNewCustomerActionPerformed(evt);
+            }
+        });
         mnuFileNew.add(mnuFileNewCustomer);
+
+        jMenuItem1.setText("Coffee");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        mnuFileNew.add(jMenuItem1);
 
         mnuFile.add(mnuFileNew);
 
@@ -64,12 +132,27 @@ public class frmMain extends javax.swing.JFrame {
         mnuDisplay.setText("Display");
 
         mnuDisplayCoffees.setText("Coffees");
+        mnuDisplayCoffees.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuDisplayCoffeesActionPerformed(evt);
+            }
+        });
         mnuDisplay.add(mnuDisplayCoffees);
 
         mnuDisplayCustomers.setText("Customers");
+        mnuDisplayCustomers.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuDisplayCustomersActionPerformed(evt);
+            }
+        });
         mnuDisplay.add(mnuDisplayCustomers);
 
         mnuDisplayOrders.setText("Orders by Customer");
+        mnuDisplayOrders.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuDisplayOrdersActionPerformed(evt);
+            }
+        });
         mnuDisplay.add(mnuDisplayOrders);
 
         mnuMenuBar.add(mnuDisplay);
@@ -77,15 +160,35 @@ public class frmMain extends javax.swing.JFrame {
         mnuDatabase.setText("Database");
 
         mnuDatabaseCreate.setText("Create Tables");
+        mnuDatabaseCreate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuDatabaseCreateActionPerformed(evt);
+            }
+        });
         mnuDatabase.add(mnuDatabaseCreate);
 
         mnuDatabaseDrop.setText("Drop Tables");
+        mnuDatabaseDrop.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuDatabaseDropActionPerformed(evt);
+            }
+        });
         mnuDatabase.add(mnuDatabaseDrop);
 
         mnuDatabasePopulate.setText("Populate Tables");
+        mnuDatabasePopulate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuDatabasePopulateActionPerformed(evt);
+            }
+        });
         mnuDatabase.add(mnuDatabasePopulate);
 
         mnuDatabaseReset.setText("Reset Tables");
+        mnuDatabaseReset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuDatabaseResetActionPerformed(evt);
+            }
+        });
         mnuDatabase.add(mnuDatabaseReset);
 
         mnuMenuBar.add(mnuDatabase);
@@ -96,21 +199,103 @@ public class frmMain extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(lblLogo)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(lblLogo)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 358, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addComponent(lblLogo)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void mnuDatabaseCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuDatabaseCreateActionPerformed
+        // TODO add your handling code here:
+        try{
+            createTables();
+        }catch (Exception e){
+            System.err.println(e);
+            JOptionPane.showMessageDialog(this, "Error occured! Check the terminal for more details");
+        }
+    }//GEN-LAST:event_mnuDatabaseCreateActionPerformed
+
+    private void mnuDatabaseDropActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuDatabaseDropActionPerformed
+        // TODO add your handling code here:
+        try{
+            dropTables();
+        }catch (Exception e){
+            System.err.println(e);
+            JOptionPane.showMessageDialog(this, "Error occured! Check the terminal for more details");
+        }
+    }//GEN-LAST:event_mnuDatabaseDropActionPerformed
+
+    private void mnuDatabasePopulateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuDatabasePopulateActionPerformed
+        // TODO add your handling code here:
+        try{
+            populateTables();
+        }catch (Exception e){
+            System.err.println(e);
+            JOptionPane.showMessageDialog(this, "Error occured! Check the terminal for more details");
+        }
+    }//GEN-LAST:event_mnuDatabasePopulateActionPerformed
+
+    private void mnuDatabaseResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuDatabaseResetActionPerformed
+        // TODO add your handling code here:
+        try{
+            resetTables();
+        }catch (Exception e){
+            System.err.println(e);
+            JOptionPane.showMessageDialog(this, "Error occured! Check the terminal for more details");
+        }
+    }//GEN-LAST:event_mnuDatabaseResetActionPerformed
+
+    private void mnuFileNewOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuFileNewOrderActionPerformed
+        // TODO add your handling code here:
+        frmAddOrder fAddOrd = new frmAddOrder(coffeeConnection);
+        fAddOrd.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        fAddOrd.setVisible(true);
+    }//GEN-LAST:event_mnuFileNewOrderActionPerformed
+
+    private void mnuFileNewCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuFileNewCustomerActionPerformed
+        // TODO add your handling code here:
+        frmAddCustomer fAddCust = new frmAddCustomer(coffeeConnection);
+        fAddCust.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        fAddCust.setVisible(true);
+    }//GEN-LAST:event_mnuFileNewCustomerActionPerformed
+
+    private void mnuDisplayCoffeesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuDisplayCoffeesActionPerformed
+        // TODO add your handling code here:
+        frmDisplayCoffees fCoff = new frmDisplayCoffees(coffeeConnection);
+        fCoff.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        fCoff.setVisible(true);
+    }//GEN-LAST:event_mnuDisplayCoffeesActionPerformed
+
+    private void mnuDisplayCustomersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuDisplayCustomersActionPerformed
+        // TODO add your handling code here:
+        frmDisplayCustomers fCust = new frmDisplayCustomers(coffeeConnection);
+        fCust.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        fCust.setVisible(true);
+    }//GEN-LAST:event_mnuDisplayCustomersActionPerformed
+
+    private void mnuDisplayOrdersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuDisplayOrdersActionPerformed
+        // TODO add your handling code here:
+        String userId = JOptionPane.showInputDialog(this, "What user ID would you like do view orders for?");
+        frmDisplayOrders fOrd = new frmDisplayOrders(coffeeConnection, userId);
+        fOrd.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        fOrd.setVisible(true);
+    }//GEN-LAST:event_mnuDisplayOrdersActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        // TODO add your handling code here:
+        frmAddCoffee fAdd = new frmAddCoffee(coffeeConnection);
+        fAdd.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        fAdd.setVisible(true);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -146,8 +331,51 @@ public class frmMain extends javax.swing.JFrame {
             }
         });
     }
-
+    //<editor-fold defaultstate="collapsed" desc="EXPAND THIS FOR SQL STRINGS">
+        //CREATE STATEMENTS
+        String dbCustomerTableCreate = "CREATE TABLE CUSTOMER (CUST_ID INT NOT NULL, FIRST_NAME CHAR(25) NOT NULL, LAST_NAME CHAR(25) NOT NULL, STREET CHAR(50), CITY CHAR(50), STATE CHAR(2), ZIP CHAR(10), PHONE CHAR(18), EMAIL CHAR(60), CREDIT_LIMIT FLOAT)";
+        String dbCoffeeTableCreate = "CREATE TABLE COFFEE (COFFEE_ID INT NOT NULL, NAME CHAR(30), DESCRIPTION CHAR(200), PRICE FLOAT, STOCK_QUANTITY INT)";
+        String dbOrderTableCreate = "CREATE TABLE ORDERS (ORDER_ID INT, FK_CUST_ID INT, FK_COFFEE_ID INT, NUM_ORDERED FLOAT, TOTAL FLOAT)";
+       
+        
+        //INSERT STATEMENTS
+        String[] dbCustomerTableInsert = {
+            "INSERT INTO CUSTOMER VALUES (1,'Doctor','Buttwinds','120 Real Street','Windy Knob','OK','12345','(123)456-7890','when@who.why',12.01)",
+            "INSERT INTO CUSTOMER VALUES (2,'Hector','McDiddlySwank','121 Reel Street','Swanksville','KY','67890','(123)456-7891','what@when.who',13.02)",
+            "INSERT INTO CUSTOMER VALUES (3,'Donovan','Dundernuggets','122 Roll Street','Stinksboro','MD','74108','(123)456-7892','which@what.how',14.03)",
+            "INSERT INTO CUSTOMER VALUES (4,'Jennifer','Doorknob','123 Fake Street','Door Knob','NY','85209','(123)456-7893','why@who.how',19.98)",
+            "INSERT INTO CUSTOMER VALUES (5,'Walter','Pancakelicker','124 Rail Street','Pancake Heights','NC','96307','(123)456-7894','ilickpancakesallday@pancake.com',20.18)"
+        };
+        String[] dbCoffeeTableInsert = {
+            "INSERT INTO COFFEE VALUES (1,'Wiggly Roast','Gets you extra wiggly in the morning',12.99,17)",
+            "INSERT INTO COFFEE VALUES (2,'Upset Roast','Gets you really fired up in the morning',2.99,55)",
+            "INSERT INTO COFFEE VALUES (3,'Inquisitive Roast','Gets you questioning life in the morning',9.99,23)",
+            "INSERT INTO COFFEE VALUES (4,'Destructive Roast','Melts through your cup and into the carpet in the morning',.99,67)",
+            "INSERT INTO COFFEE VALUES (5,'Empty Roast','Gets you an empty cup in the morning',.09,137)",
+            "INSERT INTO COFFEE VALUES (6,'Chads Chai','Gets you an eyepatch and a good time in the morning',2.79,16)"
+        };
+        String[] dbOrderTableInsert = {
+            "INSERT INTO ORDERS VALUES (1,1,1,2,25.98)",
+            "INSERT INTO ORDERS VALUES (2,5,6,1,2.79)",
+            "INSERT INTO ORDERS VALUES (3,4,3,1,9.99)",
+            "INSERT INTO ORDERS VALUES (4,3,4,2,1.98)",
+            "INSERT INTO ORDERS VALUES (5,4,2,1,2.99)",
+            "INSERT INTO ORDERS VALUES (6,2,1,1,12.99)",
+            "INSERT INTO ORDERS VALUES (7,1,5,3,.27)",
+            "INSERT INTO ORDERS VALUES (8,3,2,1,2.99)",
+            "INSERT INTO ORDERS VALUES (9,5,1,1,12.99)",
+            "INSERT INTO ORDERS VALUES (10,2,6,2,5.58)"            
+        };
+        //DROP STATEMENTS
+        String dbCustomerTableDrop = "DROP TABLE CUSTOMER";
+        String dbCoffeeTableDrop = "DROP TABLE COFFEE";
+        String dbOrderTableDrop = "DROP TABLE ORDERS";
+        //</editor-fold>
+    Connection coffeeConnection;
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JLabel lblLogo;
     private javax.swing.JMenu mnuDatabase;
     private javax.swing.JMenuItem mnuDatabaseCreate;
